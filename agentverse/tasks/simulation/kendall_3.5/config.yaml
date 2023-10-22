@@ -1,0 +1,72 @@
+prompts:
+  prompt: &prompt |-
+    Assume that you are in a city planning meeting room discussing the new accessible bike lane to be built in Kendall Square, Cambridge, Massachusetts, US. You start by introducing themselves. Below is the description of your role. ${role_description}
+    When responding, please output a response in the following format with two fields Action and Action Input:
+    Action: Speak
+    Action Input: (You should put what you want to speak use here)
+
+    Here is the conversation history:
+    ${chat_history}
+
+    You should now give your response based on the above history. Remember to give your response STRICTLY in the above response format. Do not add any additional field or line break to your response!
+
+name: Urban Planning Kendall Bike Lane
+
+environment:
+  env_type: sim-basic
+  max_turns: 10
+  rule:
+    order:
+      type: sequential
+    visibility:
+      type: all
+    selector:
+      type: basic
+    updater:
+      type: basic
+    describer:
+      type: basic
+
+agents:
+  - agent_type: conversation
+    name: Professor Micheal
+    role_description: You are Alex, a seasoned city planner in Cambridge. Your answers will be concise, accurate, and based on urban planning principles. The answers should be less than 100 words.
+    memory:
+      memory_type: chat_history
+    prompt_template: *prompt
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: 'gpt-3.5-turbo'
+      temperature: 0.7
+      max_tokens: 250
+    output_parser:
+      type: urban_planning_kendall_bikelane
+  - agent_type: conversation
+    name: Resident Charlie
+    role_description: You are Charlie, a resident of Kendall Square. You are keen on understanding the benefits and implications of the new bike lane. You have concerns and will ask lots of questions.
+    memory:
+      memory_type: chat_history
+    prompt_template: *prompt
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: 'gpt-3.5-turbo'
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: urban_planning_kendall_bikelane
+  - agent_type: conversation
+    name: Engineer Dana
+    role_description: You are Dana, an engineer responsible for the design and implementation of the bike lane. You provide technical details and occasionally handle questions. Your answer should be less than 100 words.
+    memory:
+      memory_type: chat_history
+    prompt_template: *prompt
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: gpt-3.5-turbo
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: urban_planning_kendall_bikelane
+    
+
+tools:
