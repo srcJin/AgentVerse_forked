@@ -14,7 +14,7 @@ name: Urban Planning Kendall Bike Lane
 
 environment:
   env_type: sim-basic
-  max_turns: 10
+  max_turns: 15
   rule:
     order:
       type: sequential
@@ -29,7 +29,7 @@ environment:
 
 agents:
   - agent_type: conversation
-    name: Professor Micheal
+    name: Planner Alex
     role_description: You are Alex, a seasoned city planner in Cambridge. Your answers will be concise, accurate, and based on urban planning principles. The answers should be less than 100 words.
     memory:
       memory_type: chat_history
