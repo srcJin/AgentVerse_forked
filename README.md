@@ -42,7 +42,7 @@
 
 **AgentVerse** is designed to facilitate the deployment of multiple LLM-based agents in various applications. AgentVerse primarily provides two frameworks: **task-solving** and **simulation**. 
 
-- Task-solving: This framework assembles multiple agents as an automatic multi-agent system ([Multi-agent as system](https://arxiv.org/abs/2309.02427)) to collaboratively accomplish the corresponding tasks. 
+- Task-solving: This framework assembles multiple agents as an automatic multi-agent system ([AgentVerse-Tasksolving](https://arxiv.org/pdf/2308.10848.pdf), [Multi-agent as system](https://arxiv.org/abs/2309.02427)) to collaboratively accomplish the corresponding tasks. 
 Applications: software development system, consulting system, etc.
 
 <p align="center">
@@ -482,6 +482,8 @@ AgentVerse is on a mission to revolutionize the multi-agent environment for larg
 
 
 ## How Can You Contribute?
+- **Issue and Pull-Request**: If you encounter any problems when use AgentVerse, you can propose the issue. Beisdes, you can also autonomously ask us to assign issue to you and send the PR (Please follow the [PULL_REQUEST_TEMPLATE](https://github.com/OpenBMB/AgentVerse/blob/main/PULL_REQUEST_TEMPLATE.md)) after you solve it. 
+  
 - **Code Development**: If you're an engineer, help us refine, optimize, and expand the current framework. We're always looking for talented developers to enhance our existing features and develop new modules.
 
 - **Documentation and Tutorials**: If you have a knack for writing, help us improve our documentation, create tutorials, or write blog posts to make AgentVerse more accessible to the broader community.
