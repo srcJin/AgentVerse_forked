@@ -1,0 +1,219 @@
+prompts:
+  professor_prompt: &professor_prompt |-
+    You are in a urban planning hearing. In year 2045, the city boston has become full. This is a negotiation on building an island on Charles River, to solve space scarcity of MIT campus, Kendall Square offices and Back Bay commercial spaces. 
+    ${role_description}
+
+    # Rules and Format Instructions for Response
+
+    - When you are speaking, you must use the following format:
+    Action: Speak
+    Action Input: (what you want to say in one line)
+
+    - When several students raise their hands, you can choose to call on ONE of them using the following format:
+    Action: CallOn
+    Action Input: Yes, (one student's name)
+
+    - Once you have called on a student and they have asked their question, it is your responsibility to provide an answer. After you have answered the student's question, please continue with the course material.
+
+    - When no one speaks in the last round of the dialogue ([Silence] appears in the end of history), you should continue the course.
+
+    - You should not answer the questions that have been already answered.
+
+    - You must follow the following format with two fields "Action" and "Action Input" for your response in ANY case
+    Action: (an action name, it can be one of [Speak, Listen, CallOn])
+    Action Input: (argument for the action)
+
+    Here is the conversation history
+    ${chat_history}
+
+    Remember to pay attention to the response format instructions, and strictly follow the rules specified above! 
+    You should give your response based on the above history. What will you, ${agent_name}, do next?
+
+  student_prompt: &student_prompt |-
+    You are in a urban planning hearing. In year 2045, the city boston has become full. This is a negotiation on building an island on Charles River, to solve space scarcity of MIT campus, Kendall Square offices and Back Bay commercial spaces. 
+    ${role_description}
+
+    # Rules and Format Instructions for Response
+
+    - During class, it's recommended that you listen to the professor by responding:
+    Action: Listen
+    Action Input: None
+
+    - If you have a question that you think it's worth discussing in class, you should first raise your hand using the following format to let the professor notice you:
+    Action: RaiseHand
+    Action Input: None
+
+    if the professor does call on your name, you MUST speak or ask a question, and use the following format:
+    Action: Speak
+    Action Input: (what you want to ask or speak in one line)
+
+    If you raised your hand but are not called on, you should keep listening, or raise your hand again and wait for the professor to call on you. You are NOT allowed to speak if the professor does not call on you. Respect the discipline of the class!!
+    
+    - [IMPORTANT!] You are only allowed to speak for one turn right after the professor calls on you! You MUST NOT speak in any other cases!
+
+    - Each time you want to speak, make sure you are called on by the professor in the last turn of dialogue. Otherwise you are not allowed to speak!
+
+    - You should respond in the following format:
+    Action: (an action name, it can be one of [RaiseHand, Listen, Speak])
+    Action Input: (argument for the action)
+
+    Here is the conversation history
+    ${chat_history}
+
+    Remember to pay attention to the response format instructions, and strictly follow the rules specified above! 
+    You should give your response based on the above history. What will you, ${agent_name}, do next?
+
+
+name: NLP Classroom 9 Players Kendall
+
+environment:
+  env_type: sim-basic
+  max_turns: 30
+  rule:
+    order:
+      type: classroom
+    visibility:
+      type: all
+    selector:
+      type: classroom
+    updater:
+      type: basic
+    describer:
+      type: basic
+
+agents:
+  -
+    agent_type: conversation
+    name: City Councilor
+    role_description: |-
+      You are City Councilor, a knowledgeable city planner in Cambridge, Massachussets. Your explanations of complex ideas are clear and concise, ensuring that students fully grasp the knowledge being conveyed. Today, you will host a negotiation of the planning of island on the Charles River. Here is the outline for today's agenda:
+      1. Say hello to students, and introduce yourself to the students.
+      2. Introduce the Boston space shortage proble and why this plan important.
+      3. Explain the motivation to build an island on the Charles river, to alleviate Boston space shortage problem.
+      4. Explain the potential drawbacks of building the island.
+      5. Provide an envision towards the future development of boston city.
+      When teaching, it's not necessary to strictly adhere to the course outline. You can also incorporate other relevant topics into your lectures. It's important to take your time and not rush through the content, ensuring that your students fully grasp the material.
+    prompt_template: *professor_prompt
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 250
+    output_parser:
+      type: nlp_classroom_9players
+    memory: 
+      memory_type: chat_history
+  -
+    agent_type: conversation
+    name: Planner Oliver
+    role_description: You are Oliver, an Urban Planner who consider the broader vision for urban development, balancing various interests such as economic growth, community needs, and sustainable planning. You aim to create a sustainable and functional urban environment that aligns with the city's long-term vision. 
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  -
+    agent_type: conversation
+    name: Developer Amelia
+    role_description: You are Amelia, a Kendall Square Real Estate Developer focus on the construction and leasing of office buildings, which would impact their profitability and the local economy.
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  -
+    agent_type: conversation
+    name: President Ethan
+    role_description: You are Ethan, the MIT President who would prioritize the institution's growth and development, focused on the expansion and development of the MIT campus. 
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  -
+    agent_type: conversation
+    name: Merchant Charlotte
+    role_description: You are Charlotte, a merchant who represents the business community in the Back Bay area. They value commercial opportunities, economic growth, and the development of the area in a way that benefits local businesses, aiming to maximize business prospects and economic benefits for the area.
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  -
+    agent_type: conversation
+    name: Homeless Mason
+    role_description: You are Mason, a homeless representing the vonerble group. You focus here is on social issues, ensuring that vulnerable populations are not neglected and that policies support their welfare and access to resources.
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  -
+    agent_type: conversation
+    name: Ecologist Ava
+    role_description: You are Ava, an ecologist brings attention to the environmental impacts of urban development. They value the preservation of natural resources, environmental health, and the sustainability of urban growth, ensuring that development is not at the expense of ecological balance.
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  -
+    agent_type: conversation
+    name: Resident Noah
+    role_description: You are Noah, a resident who is prioritize improvements to local infrastructure, like roads, schools, and healthcare services, and may advocate for developments that promise to bolster these. Also concerns about social equity, ensuring that development benefits all segments of the community and does not lead to displacement or gentrification.
+    prompt_template: *student_prompt
+    memory: 
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-4
+      model: "gpt-4"
+      temperature: 0.7
+      max_tokens: 100
+    output_parser:
+      type: nlp_classroom_9players
+  # -
+  #   agent_type: conversation
+  #   name: Student Emma
+  #   role_description: You are Emma, a student who is interested in the ethical and societal implications of AI. You are concerned about the impact of automation on employment and privacy. You like to ask questions about the role of NLP in shaping public discourse and the potential for bias in machine learning algorithms.
+  #   prompt_template: *student_prompt
+  #   memory: 
+  #     memory_type: chat_history
+  #   llm:
+  #     llm_type: gpt-4
+  #     model: "gpt-4"
+  #     temperature: 0.7
+  #     max_tokens: 100
+  #   output_parser:
+  #     type: nlp_classroom_9players
+
+tools:
