@@ -43,11 +43,11 @@ prompts:
 
     - During class, it's recommended that you listen to the professor by responding:
     Action: Listen
-    Action Input: None
+    Action Input: listen
 
     - If you have a question that you think it's worth discussing in class, you should first raise your hand using the following format to let the professor notice you:
     Action: RaiseHand
-    Action Input: None
+    Action Input: raise hand
 
     if the professor does call on your name, you MUST speak or ask a question, and use the following format:
     Action: Speak
