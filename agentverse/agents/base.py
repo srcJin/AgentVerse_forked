@@ -4,8 +4,10 @@ from typing import List, NamedTuple, Set, Union
 from string import Template
 
 from pydantic import BaseModel, Field
-
 from agentverse.llms import BaseLLM
+
+from agentverse.logging import logger
+from agentverse.llms.utils import count_string_tokens
 from agentverse.memory import BaseMemory, ChatHistoryMemory
 from agentverse.message import Message
 from agentverse.output_parser import OutputParser
@@ -62,7 +64,20 @@ class BaseAgent(BaseModel):
             **kwargs
         )
         append_prompt = Template(self.append_prompt_template).safe_substitute(**kwargs)
-        return prepend_prompt, append_prompt
+
+        # TODO: self.llm.args.model is not generalizable
+        num_prepend_prompt_token = count_string_tokens(
+            prepend_prompt, self.llm.args.model
+        )
+        num_append_prompt_token = count_string_tokens(
+            append_prompt, self.llm.args.model
+        )
+
+        return (
+            prepend_prompt,
+            append_prompt,
+            num_prepend_prompt_token + num_append_prompt_token,
+        )
 
     def get_receiver(self) -> Set[str]:
         return self.receiver
@@ -92,7 +107,7 @@ class BaseAgent(BaseModel):
             try:
                 self.receiver.remove(receiver)
             except KeyError as e:
-                logging.warning(f"Receiver {receiver} not found.")
+                logger.warn(f"Receiver {receiver} not found.")
         elif isinstance(receiver, set):
             self.receiver = self.receiver.difference(receiver)
         else:
